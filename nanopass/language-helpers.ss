@@ -1,3 +1,4 @@
+#!r6rs
 (library (nanopass language-helpers)
   (export prune-language-helper)
   (import (rnrs) (nanopass records))
