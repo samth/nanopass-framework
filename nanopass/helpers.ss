@@ -10,7 +10,7 @@
  
  ;; things for dealing with syntax and idetnfieris
  all-unique-identifiers? construct-id gentemp bound-id-member? bound-id-union
- partition-syn (for-syntax datum)
+ partition-syn (for-syntax datum) datum
  
  ;; things for dealing with language meta-variables
  meta-var->raw-meta-var combine unique-symbol 
@@ -57,7 +57,9 @@
          racket/fixnum
          (for-syntax racket racket/fixnum "implementation-helpers.rkt"))
 
-(begin-for-syntax 
+(module stxhelp racket
+  (require "implementation-helpers.rkt")
+  (provide datum with-r6rs-quasiquote)
   (define-syntax datum
     (syntax-rules ()
       [(_ e) (syntax->datum #'e)]))
@@ -68,6 +70,8 @@
         [(k . body)
          (with-implicit (k quasiquote)
                         #'(let-syntax ([quasiquote (syntax-rules () [(_ x) `x])]) . body))]))))
+
+(require 'stxhelp (for-syntax 'stxhelp))
 
 (define-syntax extended-quasiquote
   (lambda (x)
